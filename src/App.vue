@@ -1,6 +1,5 @@
 <template>
-  <MainNav />
-  <h1>Hello Vue</h1>
+  <main-nav />
 </template>
 
 <script>

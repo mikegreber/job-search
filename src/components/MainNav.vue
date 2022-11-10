@@ -22,14 +22,21 @@
           </ul>
         </nav>
         <div class="flex items-center h-full ml-auto">
-          <ProfileImage
+          <profile-image
             v-if="isLoggedIn"
             data-test="profile-image"
             @click="logoutUser"
           />
-          <ActionButton v-else data-test="login-button" @click="loginUser" />
+          <action-button
+            v-else
+            data-test="login-button"
+            text="Sign in"
+            type="primary"
+            @click="loginUser"
+          />
         </div>
       </div>
+      <sub-nav v-if="isLoggedIn" data-test="sub-nav" />
     </div>
   </header>
 </template>
@@ -37,9 +44,11 @@
 <script>
 import ActionButton from "@/components/ActionButton";
 import ProfileImage from "@/components/ProfileImage";
+import SubNav from "@/components/SubNav";
+
 export default {
   name: "MainNav",
-  components: { ProfileImage, ActionButton },
+  components: { ProfileImage, ActionButton, SubNav },
   data() {
     return {
       company: "Careers",

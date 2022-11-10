@@ -1,5 +1,5 @@
 import { shallowMount } from "@vue/test-utils";
-import MainNav from "@/components/MainNav.vue";
+import MainNav from "@/components/Navigation/MainNav.vue";
 
 describe("MainNav", () => {
   it("displays company name", () => {
@@ -7,7 +7,7 @@ describe("MainNav", () => {
     expect(wrapper.text()).toMatch("Careers");
   });
 
-  it("displays menu items for navigation", () => {
+  it("displays menu items for Navigation", () => {
     const wrapper = shallowMount(MainNav);
     const menuItems = wrapper.findAll("[data-test='main-nav-list-item']");
     const navigationMenuTexts = menuItems.map((item) => item.text());
@@ -45,7 +45,7 @@ describe("MainNav", () => {
       expect(profileImage.exists()).toBe(true);
     });
 
-    it("displays sub-navigation menu with additional information", async () => {
+    it("displays sub-Navigation menu with additional information", async () => {
       const wrapper = shallowMount(MainNav);
       let subNav = wrapper.find("[data-test='sub-nav']");
       expect(subNav.exists()).toBe(false);

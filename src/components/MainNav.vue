@@ -4,21 +4,64 @@
       <div
         class="flex flex-nowrap h-full px-8 mx-auto border-b border-solid border-brand-gray-1"
       >
-        <a href="/" class="flex items-center h-full text-xl">{{ company }}</a>
-        <h2 class="flex items-center h-full ml-8">Developed by {{ author }}</h2>
+        <a :href="url" class="flex items-center h-full text-xl">
+          {{ company }}
+        </a>
+        <nav class="h-full ml-12">
+          <ul class="flex h-full p-0 m-0 list-none">
+            <li
+              v-for="menuItem in menuItems"
+              :key="menuItem"
+              data-test="main-nav-list-item"
+              class="h-full ml-9 first:ml-0"
+            >
+              <a href="" class="flex items-center h-full py-2.5">
+                {{ menuItem }}
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="flex items-center h-full ml-auto">
+          <ProfileImage
+            v-if="isLoggedIn"
+            data-test="profile-image"
+            @click="logoutUser"
+          />
+          <ActionButton v-else data-test="login-button" @click="loginUser" />
+        </div>
       </div>
     </div>
   </header>
 </template>
 
 <script>
+import ActionButton from "@/components/ActionButton";
+import ProfileImage from "@/components/ProfileImage";
 export default {
   name: "MainNav",
+  components: { ProfileImage, ActionButton },
   data() {
     return {
       company: "Careers",
-      author: "Mike Greber",
+      url: "https://careers.google.com",
+      menuItems: [
+        "Teams",
+        "Locations",
+        "Life",
+        "How we hire",
+        "Students",
+        "Jobs",
+      ],
+      isLoggedIn: false,
     };
+  },
+  methods: {
+    loginUser() {
+      this.isLoggedIn = true;
+    },
+    logoutUser() {
+      this.isLoggedIn = false;
+    },
   },
 };
 </script>

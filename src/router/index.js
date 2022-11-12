@@ -19,7 +19,7 @@ const routes = [
   },
   {
     path: "/jobs/results/:id",
-    name: "JobListing",
+    name: "JobView",
     component: JobView,
   },
 ];
@@ -27,6 +27,13 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  scrollBehavior() {
+    return {
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    };
+  },
 });
 
 export default router;

@@ -60,6 +60,7 @@ export default {
   },
   computed: {
     jobPageLink() {
+      //return this.routePaths.jobVieww(this.job.id);
       return `/jobs/results/${this.job.id}`;
     },
   },

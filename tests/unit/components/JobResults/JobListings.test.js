@@ -1,5 +1,5 @@
 import { flushPromises, shallowMount, RouterLinkStub } from "@vue/test-utils";
-import { FETCH_JOBS, FILTERED_JOBS_BY_ORGANIZATIONS } from "@/store/constants";
+import { FETCH_JOBS, FILTERED_JOBS } from "@/store/constants";
 import JobListings from "@/components/JobResults/JobListings";
 
 describe("test", () => {
@@ -13,7 +13,7 @@ describe("test", () => {
   const createStore = (config = {}) => ({
     dispatch: jest.fn(),
     getters: {
-      [FILTERED_JOBS_BY_ORGANIZATIONS]: Array(15).fill({}),
+      [FILTERED_JOBS]: Array(15).fill({}),
     },
     ...config,
   });

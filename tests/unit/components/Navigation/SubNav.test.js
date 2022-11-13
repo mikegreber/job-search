@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 
 import SubNav from "@/components/Navigation/SubNav";
-import { FILTERED_JOBS_BY_ORGANIZATIONS } from "@/store/constants";
+import { FILTERED_JOBS } from "@/store/constants";
 
 describe("SubNav", () => {
   const createConfig = (routeName, $store = {}) => ({
@@ -23,7 +23,7 @@ describe("SubNav", () => {
       const routeName = "JobResults";
       const $store = {
         getters: {
-          [FILTERED_JOBS_BY_ORGANIZATIONS]: [{ id: 1 }, { id: 2 }],
+          [FILTERED_JOBS]: [{ id: 1 }, { id: 2 }],
         },
       };
       const wrapper = mount(SubNav, createConfig(routeName, $store));

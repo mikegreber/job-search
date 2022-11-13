@@ -1,5 +1,8 @@
 import mutations from "@/store/mutations";
-import { SET_SELECTED_ORGANIZATIONS} from "@/store/constants";
+import {
+  SET_SELECTED_ORGANIZATIONS,
+  SET_SELECTED_JOB_TYPES,
+} from "@/store/constants";
 
 describe("mutations", () => {
   describe("LOGIN_USER", () => {
@@ -33,6 +36,15 @@ describe("mutations", () => {
       const selected = ["Org 1", "Org 2"];
       mutations.SET_SELECTED_ORGANIZATIONS(state, selected);
       expect(state.selectedOrganizations).toEqual(selected);
+    });
+  });
+
+  describe(SET_SELECTED_JOB_TYPES, () => {
+    it("updates organizations that the user as chosen to filter jobs by", () => {
+      const state = { selectedJobTypes: [] };
+      const selected = ["Full=time", "Part-time"];
+      mutations.SET_SELECTED_JOB_TYPES(state, selected);
+      expect(state.selectedJobTypes).toEqual(selected);
     });
   });
 });

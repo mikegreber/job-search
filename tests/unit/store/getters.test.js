@@ -1,7 +1,9 @@
 import getters from "@/store/getters";
 import {
-  FILTERED_JOBS_BY_ORGANIZATIONS,
   ORGANIZATIONS,
+  INCLUDE_JOB_BY_ORGANIZATION,
+  INCLUDE_JOB_BY_JOB_TYPE,
+  FILTERED_JOBS,
 } from "@/store/constants";
 
 describe("getters", () => {
@@ -25,42 +27,59 @@ describe("getters", () => {
     });
   });
 
-  describe(FILTERED_JOBS_BY_ORGANIZATIONS, () => {
-    it("identifies jobs that are associated with the given organizations", () => {
-      const state = {
-        jobs: [
-          { organization: "Google" },
-          { organization: "Microsoft" },
-          { organization: "Amazon" },
-        ],
-        selectedOrganizations: ["Google", "Microsoft"],
-      };
-
-      const filteredJobs = getters.FILTERED_JOBS_BY_ORGANIZATIONS(state);
-      expect(filteredJobs).toEqual([
-        { organization: "Google" },
-        { organization: "Microsoft" },
-      ]);
+  describe(INCLUDE_JOB_BY_ORGANIZATION, () => {
+    describe("when the user has not selected any organizations", () => {
+      it("includes job", () => {
+        const state = { selectedOrganizations: [] };
+        const job = { organization: "Google" };
+        const result = getters.INCLUDE_JOB_BY_ORGANIZATION(state)(job);
+        expect(result).toBe(true);
+      });
     });
 
-    describe("when the user has not selected any organizations", () => {
-      it("returns all jobs", () => {
-        const state = {
-          jobs: [
-            { organization: "Google" },
-            { organization: "Microsoft" },
-            { organization: "Amazon" },
-          ],
-          selectedOrganizations: [],
-        };
+    it("identifies if job is associated with a selected organization", () => {
+      const state = { selectedOrganizations: ["Google", "Microsoft"] };
+      const job = { organization: "Google" };
+      const result = getters.INCLUDE_JOB_BY_ORGANIZATION(state)(job);
+      expect(result).toBe(true);
+    });
+  });
 
-        const filteredJobs = getters.FILTERED_JOBS_BY_ORGANIZATIONS(state);
-        expect(filteredJobs).toEqual([
-          { organization: "Google" },
-          { organization: "Microsoft" },
-          { organization: "Amazon" },
-        ]);
+  describe(INCLUDE_JOB_BY_JOB_TYPE, () => {
+    describe("when the user has not selected any job types", () => {
+      it("includes job", () => {
+        const state = { selectedJobTypes: [] };
+        const job = { jobType: "Full-time" };
+        const result = getters.INCLUDE_JOB_BY_JOB_TYPE(state)(job);
+        expect(result).toBe(true);
       });
+    });
+
+    it("identifies if job is associated with a selected job type", () => {
+      const state = { selectedJobTypes: ["Full-time", "Part-time"] };
+      const job = { jobType: "Full-time" };
+      const result = getters.INCLUDE_JOB_BY_JOB_TYPE(state)(job);
+      expect(result).toBe(true);
+    });
+  });
+
+  describe(FILTERED_JOBS, () => {
+    it("filters jobs by organization and job type", () => {
+      const INCLUDE_JOB_BY_ORGANIZATION = jest.fn().mockReturnValue(true);
+      const INCLUDE_JOB_BY_JOB_TYPE = jest.fn().mockReturnValue(true);
+      const mockGetters = {
+        INCLUDE_JOB_BY_ORGANIZATION,
+        INCLUDE_JOB_BY_JOB_TYPE,
+      };
+      const job = { id: 1, title: "A Job" };
+      const state = {
+        jobs: [job],
+      };
+
+      const result = getters.FILTERED_JOBS(state, mockGetters);
+      expect(result).toEqual([job]);
+      expect(INCLUDE_JOB_BY_ORGANIZATION).toHaveBeenCalledWith(job);
+      expect(INCLUDE_JOB_BY_JOB_TYPE).toHaveBeenCalledWith(job);
     });
   });
 });

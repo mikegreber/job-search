@@ -3,6 +3,7 @@ import {
   LOGOUT_USER,
   RECEIVE_JOBS,
   SET_SELECTED_ORGANIZATIONS,
+  SET_SELECTED_JOB_TYPES,
 } from "@/store/constants";
 
 const mutations = {
@@ -17,6 +18,9 @@ const mutations = {
   },
   [SET_SELECTED_ORGANIZATIONS](state, organizations) {
     state.selectedOrganizations = organizations;
+  },
+  [SET_SELECTED_JOB_TYPES](state, types) {
+    state.selectedJobTypes = types;
   },
 };
 

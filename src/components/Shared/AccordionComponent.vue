@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
-export default {
+import { defineComponent, ref, computed } from "vue";
+export default defineComponent({
   name: "AccordionComponent",
   props: {
     header: {
@@ -36,7 +36,7 @@ export default {
 
     return { isOpen, caretIcon, toggle };
   },
-};
+});
 </script>
 
 <style scoped></style>

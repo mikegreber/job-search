@@ -12,39 +12,41 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
+import {
+  computed,
+  defineComponent,
+  onBeforeUnmount,
+  onMounted,
+  Ref,
+  ref,
+} from "vue";
 import nextElementInList from "@/utils/nextElementInList";
 
-export default {
+export default defineComponent({
   name: "HeadlineComponent",
-  data() {
-    return {
-      action: "Build",
-      interval: null,
-    };
-  },
-  computed: {
-    actionClass() {
-      return {
-        [this.action.toLowerCase()]: true,
-      };
-    },
-  },
-  created() {
-    this.changeTitle();
-  },
-  beforeUnmount() {
-    clearInterval(this.interval);
-  },
-  methods: {
-    changeTitle() {
-      this.interval = setInterval(() => {
+  setup() {
+    const action: Ref<string> = ref("Build");
+    const actionClass = computed(() => ({
+      [action.value.toLowerCase()]: true,
+    }));
+
+    const interval: Ref<number | undefined> = ref(undefined);
+
+    onMounted(() => {
+      interval.value = setInterval(() => {
         const actions = ["Build", "Create", "Design", "Code"];
-        this.action = nextElementInList(actions, this.action);
+        action.value = nextElementInList(actions, action.value);
       }, 3000);
-    },
+    });
+
+    onBeforeUnmount(() => {
+      clearInterval(interval.value);
+    });
+
+    return { action, interval, actionClass };
   },
-};
+});
 </script>
 
 <style scoped>

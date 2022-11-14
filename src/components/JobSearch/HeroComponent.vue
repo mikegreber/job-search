@@ -44,14 +44,15 @@
   </main>
 </template>
 
-<script>
-import HeadlineComponent from "@/components/JobSearch/HeadlineComponent";
-import JobSearchForm from "@/components/JobSearch/JobSearchForm";
-import SpotlightComponent from "./SpotlightComponent";
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+import HeadlineComponent from "@/components/JobSearch/HeadlineComponent.vue";
+import JobSearchForm from "@/components/JobSearch/JobSearchForm.vue";
+import SpotlightComponent from "./SpotlightComponent.vue";
+export default defineComponent({
   name: "HeroComponent",
   components: { SpotlightComponent, JobSearchForm, HeadlineComponent },
-};
+});
 </script>
 
 <style scoped></style>

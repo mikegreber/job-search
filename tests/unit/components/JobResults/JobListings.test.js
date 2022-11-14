@@ -1,29 +1,20 @@
+import { ref } from "vue";
 import { flushPromises, shallowMount, RouterLinkStub } from "@vue/test-utils";
-import { FETCH_JOBS, FILTERED_JOBS } from "@/store/constants";
+
+import { useFetchJobsDispatch, useFilteredJobs } from "@/store/composables";
+jest.mock("@/store/composables");
+
+import useCurrentPage from "@/composables/useCurrentPage";
+jest.mock("@/composables/useCurrentPage");
+
+import usePreviousAndNextPages from "@/composables/usePreviousAndNextPages";
+jest.mock("@/composables/usePreviousAndNextPages");
+
 import JobListings from "@/components/JobResults/JobListings";
 
 describe("test", () => {
-  const createRoute = (queryParams = {}) => ({
-    query: {
-      page: "1",
-      ...queryParams,
-    },
-  });
-
-  const createStore = (config = {}) => ({
-    dispatch: jest.fn(),
-    getters: {
-      [FILTERED_JOBS]: Array(15).fill({}),
-    },
-    ...config,
-  });
-
-  const createConfig = ($route, $store) => ({
+  const createConfig = () => ({
     global: {
-      mocks: {
-        $route,
-        $store,
-      },
       stubs: {
         "router-link": RouterLinkStub,
       },
@@ -32,87 +23,91 @@ describe("test", () => {
 
   describe("when component mounts", () => {
     it("makes call to fetch from api", () => {
-      const $route = createRoute();
-      const dispatch = jest.fn();
-      const $store = createStore({
-        dispatch,
-      });
-      shallowMount(JobListings, createConfig($route, $store));
-      expect(dispatch).toHaveBeenCalledWith(FETCH_JOBS);
+      useFilteredJobs.mockReturnValue(ref([]));
+      useCurrentPage.mockReturnValue(ref(2));
+      usePreviousAndNextPages.mockReturnValue({ previousPage: ref(1) });
+      shallowMount(JobListings, createConfig());
+      expect(useFetchJobsDispatch).toHaveBeenCalled();
     });
   });
 
   it("creates a job listing for max of 10 jobs per page", async () => {
-    const $route = createRoute({ page: "1" });
-    const $store = createStore();
-    const wrapper = shallowMount(JobListings, createConfig($route, $store));
+    useFilteredJobs.mockReturnValue({ value: Array(15).fill({}) });
+    useCurrentPage.mockReturnValue(ref(1));
+    usePreviousAndNextPages.mockReturnValue({ nextPage: ref(2) });
+
+    const wrapper = shallowMount(JobListings, createConfig());
     await flushPromises();
     const jobListings = wrapper.findAll("[data-test='job-listing']");
     expect(jobListings).toHaveLength(10);
   });
 
   it("creates a job listing for max of 10 jobs per page - last page", async () => {
-    const $route = createRoute({ page: "2" });
-    const $store = createStore();
-    const wrapper = shallowMount(JobListings, createConfig($route, $store));
+    useFilteredJobs.mockReturnValue({ value: Array(15).fill({}) });
+    useCurrentPage.mockReturnValue(ref(2));
+    usePreviousAndNextPages.mockReturnValue({ previousPage: ref(1) });
+
+    const wrapper = shallowMount(JobListings, createConfig());
     await flushPromises();
     const jobListings = wrapper.findAll("[data-test='job-listing']");
     expect(jobListings).toHaveLength(5);
   });
 
   describe("when query params exclude page number", () => {
-    it("displays page number 1", () => {
-      const $route = createRoute({ page: undefined });
-      const $store = createStore();
-      const wrapper = shallowMount(JobListings, createConfig($route, $store));
-      expect(wrapper.text()).toMatch("Page 1");
-    });
-  });
-
-  describe("when query params include page number", () => {
     it("displays page number", () => {
-      const $route = createRoute({ page: "3" });
-      const $store = createStore();
-      const wrapper = shallowMount(JobListings, createConfig($route, $store));
-      expect(wrapper.text()).toMatch("Page 3");
+      useFilteredJobs.mockReturnValue({ value: Array(15).fill({}) });
+      useCurrentPage.mockReturnValue(ref(2));
+      usePreviousAndNextPages.mockReturnValue({ previousPage: ref(1) });
+      const wrapper = shallowMount(JobListings, createConfig());
+      expect(wrapper.text()).toMatch("Page 2");
     });
   });
 
   describe("when on first page", () => {
-    it("does not show link to previous page", async () => {
-      const $route = createRoute({ page: "1" });
-      const $store = createStore();
-      const wrapper = shallowMount(JobListings, createConfig($route, $store));
+    fit("does not show link to previous page", async () => {
+      useFilteredJobs.mockReturnValue({ value: Array(15).fill({}) });
+      useCurrentPage.mockReturnValue(ref(1));
+      usePreviousAndNextPages.mockReturnValue({ nextPage: ref(2) });
+      const wrapper = shallowMount(JobListings, createConfig());
       await flushPromises();
       const previousPageLink = wrapper.find("[data-test='previous-page-link']");
       expect(previousPageLink.exists()).toBe(false);
     });
-    it("shows link to next page", async () => {
-      const $route = createRoute({ page: "1" });
-      const $store = createStore();
-      const wrapper = shallowMount(JobListings, createConfig($route, $store));
-      await flushPromises();
-      const nextPageLink = wrapper.find("[data-test='next-page-link']");
-      expect(nextPageLink.exists()).toBe(true);
-    });
   });
 
-  describe("when on last page", () => {
-    it("does shows link to previous page", async () => {
-      const $route = createRoute({ page: "2" });
-      const $store = createStore();
-      const wrapper = shallowMount(JobListings, createConfig($route, $store));
+  describe("when not on first page", () => {
+    it("shows link to previous page", async () => {
+      useFilteredJobs.mockReturnValue({ value: Array(15).fill({}) });
+      useCurrentPage.mockReturnValue(ref(2));
+      usePreviousAndNextPages.mockReturnValue({ previousPage: ref(1) });
+      const wrapper = shallowMount(JobListings, createConfig());
       await flushPromises();
       const previousPageLink = wrapper.find("[data-test='previous-page-link']");
       expect(previousPageLink.exists()).toBe(true);
     });
+  });
+
+  describe("when on last page", () => {
     it("does not show link to next page", async () => {
-      const $route = createRoute({ page: "2" });
-      const $store = createStore();
-      const wrapper = shallowMount(JobListings, createConfig($route, $store));
+      useFilteredJobs.mockReturnValue({ value: Array(15).fill({}) });
+      useCurrentPage.mockReturnValue(ref(2));
+      usePreviousAndNextPages.mockReturnValue({ previousPage: ref(1) });
+      const wrapper = shallowMount(JobListings, createConfig());
       await flushPromises();
       const nextPageLink = wrapper.find("[data-test='next-page-link']");
       expect(nextPageLink.exists()).toBe(false);
+    });
+  });
+
+  describe("when not on last page", () => {
+    it("shows link to next page", async () => {
+      useFilteredJobs.mockReturnValue({ value: Array(15).fill({}) });
+      useCurrentPage.mockReturnValue(ref(1));
+      usePreviousAndNextPages.mockReturnValue({ nextPage: ref(2) });
+      const wrapper = shallowMount(JobListings, createConfig());
+      await flushPromises();
+      const nextPageLink = wrapper.find("[data-test='next-page-link']");
+      expect(nextPageLink.exists()).toBe(true);
     });
   });
 });

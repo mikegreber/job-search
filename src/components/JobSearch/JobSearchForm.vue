@@ -40,25 +40,28 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import ActionButton from "@/components/Shared/ActionButton";
 import TextInput from "../Shared/TextInput";
 export default {
   name: "JobSearchForm",
   components: { TextInput, ActionButton, FontAwesomeIcon },
-  data() {
-    return {
-      role: "",
-      location: "",
-    };
-  },
-  methods: {
-    searchForJobs() {
-      this.$router.push({
+  setup() {
+    const router = useRouter();
+
+    const role = ref("");
+    const location = ref("");
+
+    const searchForJobs = () => {
+      router.push({
         name: "JobResults",
-        query: { role: this.role, location: this.location },
+        query: { role: role.value, location: location.value },
       });
-    },
+    };
+
+    return { role, location, searchForJobs };
   },
 };
 </script>

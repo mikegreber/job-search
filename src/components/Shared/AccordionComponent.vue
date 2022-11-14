@@ -18,30 +18,23 @@
 </template>
 
 <script>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { ref, computed } from "vue";
 export default {
   name: "AccordionComponent",
-  components: { FontAwesomeIcon },
   props: {
     header: {
       type: String,
       required: true,
     },
   },
-  data() {
-    return {
-      isOpen: false,
-    };
-  },
-  computed: {
-    caretIcon() {
-      return this.isOpen ? ["fas", "angle-up"] : ["fas", "angle-down"];
-    },
-  },
-  methods: {
-    toggle() {
-      this.isOpen = !this.isOpen;
-    },
+  setup() {
+    const isOpen = ref(false);
+    const toggle = () => (isOpen.value = !isOpen.value);
+    const caretIcon = computed(() =>
+      isOpen.value ? ["fas", "angle-up"] : ["fas", "angle-down"]
+    );
+
+    return { isOpen, caretIcon, toggle };
   },
 };
 </script>

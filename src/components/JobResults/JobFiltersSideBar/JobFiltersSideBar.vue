@@ -10,22 +10,46 @@
         </div>
       </div>
 
-      <job-filters-side-bar-job-types />
-      <job-filters-side-bar-organizations />
+      <job-filters-side-bar-checkbox-group
+        :values="jobTypes"
+        :mutation="SET_SELECTED_JOB_TYPES"
+        header="Job Types"
+      />
+
+      <job-filters-side-bar-checkbox-group
+        :values="organizations"
+        :mutation="SET_SELECTED_ORGANIZATIONS"
+        header="Organizations"
+      />
     </section>
   </div>
 </template>
 
 <script>
 import ActionButton from "@/components/Shared/ActionButton";
-import JobFiltersSideBarOrganizations from "@/components/JobResults/JobFiltersSideBar/JobFiltersSideBarOrganizations";
-import JobFiltersSideBarJobTypes from "@/components/JobResults/JobFiltersSideBar/JobFiltersSideBarJobTypes";
+import JobFiltersSideBarCheckboxGroup from "@/components/JobResults/JobFiltersSideBar/JobFiltersSideBarCheckboxGroup";
+import { useJobTypes, useOrganizations } from "@/store/composables";
+import {
+  SET_SELECTED_JOB_TYPES,
+  SET_SELECTED_ORGANIZATIONS,
+} from "@/store/constants";
+
 export default {
   name: "JobFiltersSideBar",
   components: {
-    JobFiltersSideBarJobTypes,
-    JobFiltersSideBarOrganizations,
+    JobFiltersSideBarCheckboxGroup,
     ActionButton,
+  },
+  setup() {
+    const jobTypes = useJobTypes();
+    const organizations = useOrganizations();
+
+    return {
+      jobTypes,
+      organizations,
+      SET_SELECTED_JOB_TYPES,
+      SET_SELECTED_ORGANIZATIONS,
+    };
   },
 };
 </script>

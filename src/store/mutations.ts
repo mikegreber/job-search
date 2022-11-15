@@ -9,6 +9,7 @@ import {
   SET_SELECTED_JOB_TYPES,
   RECEIVE_DEGREES,
   SET_SELECTED_DEGREES,
+  CLEAR_JOB_FILTERS,
 } from "./constants";
 
 const mutations = {
@@ -41,6 +42,12 @@ const mutations = {
 
   [SET_SELECTED_DEGREES]: (state: GlobalState, degrees: string[]) => {
     state.selectedDegrees = degrees;
+  },
+
+  [CLEAR_JOB_FILTERS]: (state: GlobalState) => {
+    state.selectedJobTypes = [];
+    state.selectedOrganizations = [];
+    state.selectedDegrees = [];
   },
 };
 

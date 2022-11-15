@@ -1,7 +1,13 @@
 import mutations from "@/store/mutations";
 import {
   SET_SELECTED_ORGANIZATIONS,
-  SET_SELECTED_JOB_TYPES, RECEIVE_JOBS, RECEIVE_DEGREES, LOGOUT_USER, LOGIN_USER, SET_SELECTED_DEGREES
+  SET_SELECTED_JOB_TYPES,
+  RECEIVE_JOBS,
+  RECEIVE_DEGREES,
+  LOGOUT_USER,
+  LOGIN_USER,
+  SET_SELECTED_DEGREES,
+  CLEAR_JOB_FILTERS,
 } from "@/store/constants";
 import { GlobalState } from "@/store/types";
 import { Degree, Job } from "@/api/types";
@@ -72,6 +78,21 @@ describe("mutations", () => {
       const selected = ["Master's", "Bachelor's"];
       mutations.SET_SELECTED_DEGREES(state, selected);
       expect(state.selectedDegrees).toEqual(selected);
+    });
+  });
+
+  describe(CLEAR_JOB_FILTERS, () => {
+    it("removes all selected filters", () => {
+      const state = createState({
+        selectedOrganizations: ["Google", "Amazon"],
+        selectedJobTypes: ["Full-time", "Part-time"],
+        selectedDegrees: ["Master's", "Bachelor's"],
+      });
+
+      mutations.CLEAR_JOB_FILTERS(state);
+      expect(state.selectedOrganizations).toEqual([]);
+      expect(state.selectedJobTypes).toEqual([]);
+      expect(state.selectedDegrees).toEqual([]);
     });
   });
 });

@@ -1,14 +1,14 @@
 import mutations from "@/store/mutations";
 import {
   SET_SELECTED_ORGANIZATIONS,
-  SET_SELECTED_JOB_TYPES,
+  SET_SELECTED_JOB_TYPES, RECEIVE_JOBS, RECEIVE_DEGREES, LOGOUT_USER, LOGIN_USER, SET_SELECTED_DEGREES
 } from "@/store/constants";
 import { GlobalState } from "@/store/types";
-import { Job } from "@/api/types";
-import { createState, createJob } from "./utils";
+import { Degree, Job } from "@/api/types";
+import { createState, createJob, createDegree } from "./utils";
 
 describe("mutations", () => {
-  describe("LOGIN_USER", () => {
+  describe(LOGIN_USER, () => {
     it("it logs the user in", () => {
       const state = createState({ isLoggedIn: false });
       mutations.LOGIN_USER(state);
@@ -16,7 +16,7 @@ describe("mutations", () => {
     });
   });
 
-  describe("LOGOUT_USER", () => {
+  describe(LOGOUT_USER, () => {
     it("it logs the user out", () => {
       const state = createState({ isLoggedIn: true });
       mutations.LOGOUT_USER(state);
@@ -24,7 +24,7 @@ describe("mutations", () => {
     });
   });
 
-  describe("RECEIVE_JOBS", () => {
+  describe(RECEIVE_JOBS, () => {
     it("receives jobs from api", () => {
       const state = createState({ jobs: [] });
       const jobs: Job[] = [
@@ -33,6 +33,18 @@ describe("mutations", () => {
       ];
       mutations.RECEIVE_JOBS(state, jobs);
       expect(state.jobs).toEqual(jobs);
+    });
+  });
+
+  describe(RECEIVE_DEGREES, () => {
+    it("receives jobs from api", () => {
+      const state = createState({ degrees: [] });
+      const degrees: Degree[] = [
+        createDegree({ degree: "Master's" }),
+        createJob({ degree: "Bachelor's" }),
+      ];
+      mutations.RECEIVE_DEGREES(state, degrees);
+      expect(state.degrees).toEqual(degrees);
     });
   });
 
@@ -51,6 +63,15 @@ describe("mutations", () => {
       const selected = ["Full=time", "Part-time"];
       mutations.SET_SELECTED_JOB_TYPES(state, selected);
       expect(state.selectedJobTypes).toEqual(selected);
+    });
+  });
+
+  describe(SET_SELECTED_DEGREES, () => {
+    it("updates degrees that the user as chosen to filter jobs by", () => {
+      const state = createState({ selectedDegrees: [] });
+      const selected = ["Master's", "Bachelor's"];
+      mutations.SET_SELECTED_DEGREES(state, selected);
+      expect(state.selectedDegrees).toEqual(selected);
     });
   });
 });

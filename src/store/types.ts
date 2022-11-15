@@ -1,15 +1,10 @@
-import { Job } from "@/api/types";
-// import {
-//   LOGIN_USER,
-//   LOGOUT_USER,
-//   RECEIVE_JOBS,
-//   SET_SELECTED_JOB_TYPES,
-//   SET_SELECTED_ORGANIZATIONS,
-// } from "@/store/constants";
+import { Degree, Job } from "@/api/types";
 
 export interface GlobalState {
   isLoggedIn: boolean;
   jobs: Job[];
+  degrees: Degree[];
   selectedOrganizations: string[];
   selectedJobTypes: string[];
+  selectedDegrees: string[];
 }

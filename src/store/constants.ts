@@ -6,6 +6,13 @@ export const LOGOUT_USER = "LOGOUT_USER";
 export const RECEIVE_JOBS = "RECEIVE_JOBS";
 export const FETCH_JOBS = "FETCH_JOBS";
 
+// degree types filter
+export const DEGREES = "DEGREES";
+export const SET_SELECTED_DEGREES = "SET_SELECTED_DEGREES";
+export const INCLUDE_JOB_BY_DEGREE = "INCLUDE_JOB_BY_DEGREE";
+export const RECEIVE_DEGREES = "RECEIVE_DEGREES";
+export const FETCH_DEGREES = "FETCH_DEGREES";
+
 // organizations filter
 export const ORGANIZATIONS = "ORGANIZATIONS";
 export const SET_SELECTED_ORGANIZATIONS = "SET_SELECTED_ORGANIZATIONS";

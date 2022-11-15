@@ -20,4 +20,9 @@ describe("state", () => {
     const startingState = state();
     expect(startingState.selectedJobTypes).toEqual([]);
   });
+
+  it("stores all degrees that jobs may require", () => {
+    const startingState = state();
+    expect(startingState.degrees).toEqual([]);
+  });
 });

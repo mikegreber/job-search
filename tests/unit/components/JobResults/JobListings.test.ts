@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { flushPromises, shallowMount, RouterLinkStub } from "@vue/test-utils";
 
-import { useFetchJobsDispatch, useFilteredJobs } from "@/store/composables";
+import { useFetchJobsDispatch, useFetchDegreesDispatch, useFilteredJobs } from "@/store/composables";
 jest.mock("@/store/composables");
 
 import useCurrentPage from "@/composables/useCurrentPage";
@@ -11,6 +11,10 @@ import usePreviousAndNextPages from "@/composables/usePreviousAndNextPages";
 jest.mock("@/composables/usePreviousAndNextPages");
 
 import JobListings from "@/components/JobResults/JobListings.vue";
+
+const useFilteredJobsMock = useFilteredJobs as jest.Mock;
+const useCurrentPageMock = useCurrentPage as jest.Mock;
+const usePreviousAndNextPagesMock = usePreviousAndNextPages as jest.Mock;
 
 describe("test", () => {
   const createConfig = () => ({
@@ -22,23 +26,32 @@ describe("test", () => {
   });
 
   describe("when component mounts", () => {
-    it("makes call to fetch from api", () => {
-      (useFilteredJobs as jest.Mock).mockReturnValue(ref([]));
-      (useCurrentPage as jest.Mock).mockReturnValue(ref(2));
-      (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+    it("makes call to fetch jobs from api", () => {
+      useFilteredJobsMock.mockReturnValue(ref([]));
+      useCurrentPageMock.mockReturnValue(ref(2));
+      usePreviousAndNextPagesMock.mockReturnValue({
         previousPage: ref(1),
       });
       shallowMount(JobListings, createConfig());
       expect(useFetchJobsDispatch).toHaveBeenCalled();
     });
+    it("makes call to fetch degrees from api", () => {
+      useFilteredJobsMock.mockReturnValue(ref([]));
+      useCurrentPageMock.mockReturnValue(ref(2));
+      usePreviousAndNextPagesMock.mockReturnValue({
+        previousPage: ref(1),
+      });
+      shallowMount(JobListings, createConfig());
+      expect(useFetchDegreesDispatch).toHaveBeenCalled();
+    });
   });
 
   it("creates a job listing for max of 10 jobs per page", async () => {
-    (useFilteredJobs as jest.Mock).mockReturnValue({
+    useFilteredJobsMock.mockReturnValue({
       value: Array(15).fill({}),
     });
-    (useCurrentPage as jest.Mock).mockReturnValue(ref(1));
-    (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+    useCurrentPageMock.mockReturnValue(ref(1));
+    usePreviousAndNextPagesMock.mockReturnValue({
       nextPage: ref(2),
     });
 
@@ -49,11 +62,11 @@ describe("test", () => {
   });
 
   it("creates a job listing for max of 10 jobs per page - last page", async () => {
-    (useFilteredJobs as jest.Mock).mockReturnValue({
+    useFilteredJobsMock.mockReturnValue({
       value: Array(15).fill({}),
     });
-    (useCurrentPage as jest.Mock).mockReturnValue(ref(2));
-    (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+    useCurrentPageMock.mockReturnValue(ref(2));
+    usePreviousAndNextPagesMock.mockReturnValue({
       previousPage: ref(1),
     });
 
@@ -65,11 +78,11 @@ describe("test", () => {
 
   describe("when query params exclude page number", () => {
     it("displays page number", () => {
-      (useFilteredJobs as jest.Mock).mockReturnValue({
+      useFilteredJobsMock.mockReturnValue({
         value: Array(15).fill({}),
       });
-      (useCurrentPage as jest.Mock).mockReturnValue(ref(2));
-      (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+      useCurrentPageMock.mockReturnValue(ref(2));
+      usePreviousAndNextPagesMock.mockReturnValue({
         previousPage: ref(1),
       });
       const wrapper = shallowMount(JobListings, createConfig());
@@ -79,11 +92,11 @@ describe("test", () => {
 
   describe("when on first page", () => {
     it("does not show link to previous page", async () => {
-      (useFilteredJobs as jest.Mock).mockReturnValue({
+      useFilteredJobsMock.mockReturnValue({
         value: Array(15).fill({}),
       });
-      (useCurrentPage as jest.Mock).mockReturnValue(ref(1));
-      (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+      useCurrentPageMock.mockReturnValue(ref(1));
+      usePreviousAndNextPagesMock.mockReturnValue({
         nextPage: ref(2),
       });
       const wrapper = shallowMount(JobListings, createConfig());
@@ -95,11 +108,11 @@ describe("test", () => {
 
   describe("when not on first page", () => {
     it("shows link to previous page", async () => {
-      (useFilteredJobs as jest.Mock).mockReturnValue({
+      useFilteredJobsMock.mockReturnValue({
         value: Array(15).fill({}),
       });
-      (useCurrentPage as jest.Mock).mockReturnValue(ref(2));
-      (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+      useCurrentPageMock.mockReturnValue(ref(2));
+      usePreviousAndNextPagesMock.mockReturnValue({
         previousPage: ref(1),
       });
       const wrapper = shallowMount(JobListings, createConfig());
@@ -111,11 +124,11 @@ describe("test", () => {
 
   describe("when on last page", () => {
     it("does not show link to next page", async () => {
-      (useFilteredJobs as jest.Mock).mockReturnValue({
+      useFilteredJobsMock.mockReturnValue({
         value: Array(15).fill({}),
       });
-      (useCurrentPage as jest.Mock).mockReturnValue(ref(2));
-      (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+      useCurrentPageMock.mockReturnValue(ref(2));
+      usePreviousAndNextPagesMock.mockReturnValue({
         previousPage: ref(1),
       });
       const wrapper = shallowMount(JobListings, createConfig());
@@ -127,11 +140,11 @@ describe("test", () => {
 
   describe("when not on last page", () => {
     it("shows link to next page", async () => {
-      (useFilteredJobs as jest.Mock).mockReturnValue({
+      useFilteredJobsMock.mockReturnValue({
         value: Array(15).fill({}),
       });
-      (useCurrentPage as jest.Mock).mockReturnValue(ref(1));
-      (usePreviousAndNextPages as jest.Mock).mockReturnValue({
+      useCurrentPageMock.mockReturnValue(ref(1));
+      usePreviousAndNextPagesMock.mockReturnValue({
         nextPage: ref(2),
       });
       const wrapper = shallowMount(JobListings, createConfig());

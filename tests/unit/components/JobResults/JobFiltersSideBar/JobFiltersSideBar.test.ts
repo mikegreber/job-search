@@ -1,7 +1,8 @@
 import { shallowMount } from "@vue/test-utils";
 import JobFiltersSideBar from "@/components/JobResults/JobFiltersSideBar/JobFiltersSideBar.vue";
-import { useJobTypes, useOrganizations } from "@/store/composables";
+import { useJobTypes, useOrganizations, useDegrees } from "@/store/composables";
 import {
+  SET_SELECTED_DEGREES,
   SET_SELECTED_JOB_TYPES,
   SET_SELECTED_ORGANIZATIONS,
 } from "@/store/constants";
@@ -9,11 +10,14 @@ jest.mock("@/store/composables");
 
 const useJobTypesMock = useJobTypes as jest.Mock;
 const useOrganizationsMock = useOrganizations as jest.Mock;
+const useDegreesMock = useDegrees as jest.Mock;
 
 describe("JobFiltersSideBar", () => {
   it("allows user to filter jobs by job types", () => {
     useJobTypesMock.mockReturnValue(new Set(["Full-time", "Part-time"]));
     useOrganizationsMock.mockReturnValue(new Set(["AirBnB"]));
+    useDegreesMock.mockReturnValue(["Master's", "Bachelor's"]);
+
     const wrapper = shallowMount(JobFiltersSideBar);
     const jobTypesFilter = wrapper.findComponent(
       "[data-test='job-types-filter']"
@@ -28,6 +32,8 @@ describe("JobFiltersSideBar", () => {
   it("allows user to filter jobs by organization", () => {
     useJobTypesMock.mockReturnValue(new Set(["Full-time", "Part-time"]));
     useOrganizationsMock.mockReturnValue(new Set(["AirBnB"]));
+    useDegreesMock.mockReturnValue(["Master's", "Bachelor's"]);
+
     const wrapper = shallowMount(JobFiltersSideBar);
     const jobTypesFilter = wrapper.findComponent(
       "[data-test='organizations-filter']"
@@ -37,5 +43,21 @@ describe("JobFiltersSideBar", () => {
     expect(header).toBe("Organizations");
     expect(values).toEqual(new Set(["AirBnB"]));
     expect(mutation).toBe(SET_SELECTED_ORGANIZATIONS);
+  });
+
+  it("allows user to filter jobs by organization", () => {
+    useJobTypesMock.mockReturnValue(new Set(["Full-time", "Part-time"]));
+    useOrganizationsMock.mockReturnValue(new Set(["AirBnB"]));
+    useDegreesMock.mockReturnValue(["Master's", "Bachelor's"]);
+
+    const wrapper = shallowMount(JobFiltersSideBar);
+    const jobTypesFilter = wrapper.findComponent(
+      "[data-test='degrees-filter']"
+    );
+    // @ts-ignore;
+    const { header, values, mutation } = jobTypesFilter.props();
+    expect(header).toBe("Degree");
+    expect(values).toEqual(["Master's", "Bachelor's"]);
+    expect(mutation).toBe(SET_SELECTED_DEGREES);
   });
 });

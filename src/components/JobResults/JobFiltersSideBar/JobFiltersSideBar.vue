@@ -11,6 +11,13 @@
       </div>
 
       <job-filters-side-bar-checkbox-group
+        :values="degrees"
+        :mutation="SET_SELECTED_DEGREES"
+        data-test="degrees-filter"
+        header="Degree"
+      />
+
+      <job-filters-side-bar-checkbox-group
         :values="jobTypes"
         :mutation="SET_SELECTED_JOB_TYPES"
         data-test="job-types-filter"
@@ -31,8 +38,9 @@
 import { defineComponent } from "vue";
 import ActionButton from "@/components/Shared/ActionButton.vue";
 import JobFiltersSideBarCheckboxGroup from "@/components/JobResults/JobFiltersSideBar/JobFiltersSideBarCheckboxGroup.vue";
-import { useJobTypes, useOrganizations } from "@/store/composables";
+import { useDegrees, useJobTypes, useOrganizations } from "@/store/composables";
 import {
+  SET_SELECTED_DEGREES,
   SET_SELECTED_JOB_TYPES,
   SET_SELECTED_ORGANIZATIONS,
 } from "@/store/constants";
@@ -46,12 +54,15 @@ export default defineComponent({
   setup() {
     const jobTypes = useJobTypes();
     const organizations = useOrganizations();
+    const degrees = useDegrees();
 
     return {
       jobTypes,
       organizations,
+      degrees,
       SET_SELECTED_JOB_TYPES,
       SET_SELECTED_ORGANIZATIONS,
+      SET_SELECTED_DEGREES,
     };
   },
 });

@@ -1,17 +1,17 @@
 import mutations from "@/store/mutations";
 import {
-  SET_SELECTED_ORGANIZATIONS,
-  SET_SELECTED_JOB_TYPES,
-  RECEIVE_JOBS,
-  RECEIVE_DEGREES,
-  LOGOUT_USER,
-  LOGIN_USER,
-  SET_SELECTED_DEGREES,
   CLEAR_JOB_FILTERS,
+  LOGIN_USER,
+  LOGOUT_USER,
+  RECEIVE_DEGREES,
+  RECEIVE_JOBS,
+  SET_SELECTED_DEGREES,
+  SET_SELECTED_JOB_TYPES,
+  SET_SELECTED_ORGANIZATIONS,
+  SET_SKILLS_SEARCH_TERM,
 } from "@/store/constants";
-import { GlobalState } from "@/store/types";
 import { Degree, Job } from "@/api/types";
-import { createState, createJob, createDegree } from "./utils";
+import { createDegree, createJob, createState } from "./utils";
 
 describe("mutations", () => {
   describe(LOGIN_USER, () => {
@@ -81,18 +81,29 @@ describe("mutations", () => {
     });
   });
 
+  describe(SET_SKILLS_SEARCH_TERM, () => {
+    it("updates degrees that the user as chosen to filter jobs by", () => {
+      const state = createState({ skillsSearchTerm: "" });
+      const searchTerm = "Vue";
+      mutations.SET_SKILLS_SEARCH_TERM(state, searchTerm);
+      expect(state.skillsSearchTerm).toEqual(searchTerm);
+    });
+  });
+
   describe(CLEAR_JOB_FILTERS, () => {
     it("removes all selected filters", () => {
       const state = createState({
         selectedOrganizations: ["Google", "Amazon"],
         selectedJobTypes: ["Full-time", "Part-time"],
         selectedDegrees: ["Master's", "Bachelor's"],
+        skillsSearchTerm: "Programmer",
       });
 
       mutations.CLEAR_JOB_FILTERS(state);
       expect(state.selectedOrganizations).toEqual([]);
       expect(state.selectedJobTypes).toEqual([]);
       expect(state.selectedDegrees).toEqual([]);
+      expect(state.skillsSearchTerm).toEqual("");
     });
   });
 });

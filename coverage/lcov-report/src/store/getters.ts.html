@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
@@ -125,7 +125,17 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">14x</span>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,7 +153,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -159,6 +171,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -184,9 +197,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
   DEGREES,
   ORGANIZATIONS,
@@ -195,6 +215,7 @@
   INCLUDE_JOB_BY_ORGANIZATION,
   INCLUDE_JOB_BY_JOB_TYPE,
   INCLUDE_JOB_BY_DEGREE,
+  INCLUDE_JOB_BY_SKILL,
 } from "./constants";
 import { GlobalState } from "@/store/types";
 import { Job } from "@/api/types";
@@ -203,6 +224,7 @@ interface IncludeJobGetters {
   [INCLUDE_JOB_BY_JOB_TYPE]: (job: Job) =&gt; boolean;
   [INCLUDE_JOB_BY_ORGANIZATION]: (job: Job) =&gt; boolean;
   [INCLUDE_JOB_BY_DEGREE]: (job: Job) =&gt; boolean;
+  [INCLUDE_JOB_BY_SKILL]: (job: Job) =&gt; boolean;
 }
 &nbsp;
 const getters = {
@@ -220,7 +242,8 @@ const getters = {
     return state.jobs
       .filter((job) =&gt; getters.INCLUDE_JOB_BY_DEGREE(job))
       .filter((job) =&gt; getters.INCLUDE_JOB_BY_ORGANIZATION(job))
-      .filter((job) =&gt; getters.INCLUDE_JOB_BY_JOB_TYPE(job));
+      .filter((job) =&gt; getters.INCLUDE_JOB_BY_JOB_TYPE(job))
+      .filter((job) =&gt; getters.INCLUDE_JOB_BY_SKILL(job));
   },
   [DEGREES]: (state: GlobalState) =&gt; {
     return state.degrees.map((degree) =&gt; degree.degree);
@@ -246,6 +269,13 @@ const getters = {
       state.selectedDegrees.includes(job.degree)
     );
   },
+  [INCLUDE_JOB_BY_SKILL]: (state: GlobalState) =&gt; (job: Job) =&gt; {
+    return (
+      state.skillsSearchTerm === undefined ||
+      state.skillsSearchTerm.length === 0 ||
+      job.title.toLowerCase().includes(state.skillsSearchTerm.toLowerCase())
+    );
+  },
 };
 &nbsp;
 export default getters;
@@ -256,7 +286,7 @@ export default getters;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-11-15T01:28:43.518Z
+                at 2022-11-15T05:10:11.950Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

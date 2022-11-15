@@ -7,6 +7,7 @@ import {
   DEGREES,
   JOB_TYPES,
   INCLUDE_JOB_BY_DEGREE,
+  INCLUDE_JOB_BY_SKILL,
 } from "@/store/constants";
 import { createState, createJob, createDegree } from "./utils";
 
@@ -111,15 +112,42 @@ describe("getters", () => {
     });
   });
 
+  describe(INCLUDE_JOB_BY_SKILL, () => {
+    describe("when the not entered a search", () => {
+      it("includes all", () => {
+        const state = createState({ skillsSearchTerm: "" });
+        const job = createJob({ title: "Vue Developer" });
+        const result = getters.INCLUDE_JOB_BY_SKILL(state)(job);
+        expect(result).toBe(true);
+      });
+    });
+
+    it("identifies if job is associated the search", () => {
+      const state = createState({ skillsSearchTerm: "" });
+      const job = createJob({ title: "Vue Developer" });
+      const result = getters.INCLUDE_JOB_BY_SKILL(state)(job);
+      expect(result).toBe(true);
+    });
+
+    it("handles inconsistent character casing", () => {
+      const state = createState({ skillsSearchTerm: "vuE" });
+      const job = createJob({ title: "Vue Developer" });
+      const result = getters.INCLUDE_JOB_BY_SKILL(state)(job);
+      expect(result).toBe(true);
+    });
+  });
+
   describe(FILTERED_JOBS, () => {
     it("filters jobs by organization and job type", () => {
       const INCLUDE_JOB_BY_ORGANIZATION = jest.fn().mockReturnValue(true);
       const INCLUDE_JOB_BY_JOB_TYPE = jest.fn().mockReturnValue(true);
       const INCLUDE_JOB_BY_DEGREE = jest.fn().mockReturnValue(true);
+      const INCLUDE_JOB_BY_SKILL = jest.fn().mockReturnValue(true);
       const mockGetters = {
         INCLUDE_JOB_BY_ORGANIZATION,
         INCLUDE_JOB_BY_JOB_TYPE,
         INCLUDE_JOB_BY_DEGREE,
+        INCLUDE_JOB_BY_SKILL,
       };
       const job = createJob({ id: 1, title: "A Job" });
       const state = createState({
@@ -131,6 +159,7 @@ describe("getters", () => {
       expect(INCLUDE_JOB_BY_ORGANIZATION).toHaveBeenCalledWith(job);
       expect(INCLUDE_JOB_BY_JOB_TYPE).toHaveBeenCalledWith(job);
       expect(INCLUDE_JOB_BY_DEGREE).toHaveBeenCalledWith(job);
+      expect(INCLUDE_JOB_BY_SKILL).toHaveBeenCalledWith(job);
     });
   });
 });
